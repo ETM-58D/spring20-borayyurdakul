@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1894.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1"># Question 1.b)</p>
+<p class="p2"><br></p>
+<p class="p1">#area</p>
+<p class="p2"><br></p>
+<p class="p1">library(data.table)</p>
+<p class="p1">library(scatterplot3d)</p>
+<p class="p2"><br></p>
+<p class="p1">rm(list = ls())</p>
+<p class="p1">cat("\f")</p>
+<p class="p2"><br></p>
+<p class="p1">rm(list = ls())</p>
+<p class="p1">cat("\f")</p>
+<p class="p2"><br></p>
+<p class="p1">nof_samples=1000</p>
+<p class="p1">data_points=runif(nof_samples*2,-1,1)</p>
+<p class="p1">data_points=matrix(data_points,ncol=2)</p>
+<p class="p1">plot(data_points)</p>
+<p class="p1">euclidean_distance=sqrt((data_points[ ,1]-0)^2 + (data_points[ ,2]-0)^2)</p>
+<p class="p1">is_in_circle=euclidean_distance&lt;=1</p>
+<p class="p1">nof_sphere=sum(is_in_circle)</p>
+<p class="p1">estimated_pi=(nof_sphere/nof_samples)*6</p>
+<p class="p1">print(estimated_pi)</p>
+<p class="p1">print(pi)</p>
+<p class="p1">points(data_points,col=as.numeric(is_in_circle)+1)</p>
+<p class="p2"><br></p>
+<p class="p1">#volume</p>
+<p class="p2"><br></p>
+<p class="p1">rm(list = ls())</p>
+<p class="p1">cat("\f")</p>
+<p class="p2"><br></p>
+<p class="p1">nof_samples=1000</p>
+<p class="p1">data_points=runif(nof_samples*3,-1,1)</p>
+<p class="p1">data_points=matrix(data_points,ncol=3)</p>
+<p class="p1">scatterplot3d(data_points)</p>
+<p class="p1">euclidean_distance=sqrt((data_points[ ,1]-0)^2 + (data_points[ ,2]-0)^2+(data_points[ ,3]-0)^2)</p>
+<p class="p1">is_in_sphere=euclidean_distance&lt;=1</p>
+<p class="p1">nof_sphere=sum(is_in_sphere)</p>
+<p class="p1">estimated_pi=nof_sphere/nof_samples*6</p>
+<p class="p1">print(estimated_pi)</p>
+<p class="p1">print(pi)</p>
+<p class="p1">scatterplot3d(data_points,color=as.numeric(is_in_sphere)+1)</p>
+</body>
+</html>
