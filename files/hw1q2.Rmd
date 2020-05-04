@@ -1,6 +1,6 @@
 ---
 title: "Q2 Answer"
-author: "Boray Yurdakul - ETM58d - Spring 2020 - Corona Term lol"
+author: "Boray Yurdakul - ETM58d - Spring 2020"
 ---
 ```{r,echo=FALSE,results="hide"}
 library(knitr)
@@ -12,6 +12,6 @@ rmarkdown::render("/home/baydogan/Courses/IE582/Fall18/Guidelines/example_homewo
 rmarkdown::render("/home/baydogan/Courses/IE582/Fall18/Guidelines/example_homework_0.Rmd",output_format="html_document")
 ```
 
-1. [Codes for answer of Question 2](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/q2.html)
+1. [Codes for answer of Question 2](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/q2.rtf)
 
-    This example is important because it is an R Notebook on Titanic data set. Titanic is considered as one of the Data Science 101 data set and this notebook provides a good exploratory data analysis. It is also a Kaggle Kernel, which is a very good source for this kind of example R codes. The notebook also covers feature engineering, missing data imputation and modeling.
+    Question 2: Please use Boston house price dataset on https://www.cs.toronto.edu/~delve/data/boston/desc.html. “This dataset contains information collected by the U.S Census Service concerning housing in the area of Boston Mass.” and the details are provided on https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html. Suppose our aim is to understand if certain variables explains the variability better than the other. We would like to generate an index that can summarize the houses using few variables combined as an index. Perform PCA on the provided data and comment on your results.

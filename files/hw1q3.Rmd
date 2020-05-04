@@ -1,6 +1,6 @@
 ---
 title: "Q3 Answer"
-author: "Boray Yurdakul - ETM58d - Spring 2020 - Corona Term lol"
+author: "Boray Yurdakul - ETM58d - Spring 2020"
 ---
 ```{r,echo=FALSE,results="hide"}
 library(knitr)
@@ -12,6 +12,10 @@ rmarkdown::render("/home/baydogan/Courses/IE582/Fall18/Guidelines/example_homewo
 rmarkdown::render("/home/baydogan/Courses/IE582/Fall18/Guidelines/example_homework_0.Rmd",output_format="html_document")
 ```
 
-1. [Codes for answer of Question 3](files/q3.html)
+1. [Codes for answer of Question 3](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/q3.rtf)
 
-    This example is important because it is an R Notebook on Titanic data set. Titanic is considered as one of the Data Science 101 data set and this notebook provides a good exploratory data analysis. It is also a Kaggle Kernel, which is a very good source for this kind of example R codes. The notebook also covers feature engineering, missing data imputation and modeling.
+    Question 3: Data from the Netflix competition are available on Moodle. The data provide the ratings that 10000 users gave to 100 movies (the extension of the file is *.dat but it is a file where each row is a user and the columns represent the movie. Each entry is the rating of the user on the row to the movie on the column). A list of movie titles is also available on Moodle. Not all movies were rated by all users.
+    
+    Suggest an appropriate distance (or similarity) metric between movies based on user ratings. To calculate the distance, you need to impute the missing values as some movies are not rated by all users. Please impute the missing ratings with a reasonable approach (i.e. fill with median rating) and perform classical multidimensional scaling on the distance that you create. Represent the movies on a 2D plot using the reduced dimensions. Are there any interesting results based on the reduced dimensions?
+    
+    Please note that distance calculation with a vector of size 10000 (i.e. ratings for a movie) can be problematic depending on your hardware. You can sample 1000 users randomly to perform the same operations if you experience difficulties.

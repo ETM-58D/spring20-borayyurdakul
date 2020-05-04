@@ -1,6 +1,6 @@
 ---
 title: "Q1 Answers"
-author: "Boray Yurdakul - ETM58d - Spring 2020 - Corona Term lol"
+author: "Boray Yurdakul - ETM58d - Spring 2020"
 ---
 ```{r,echo=FALSE,results="hide"}
 library(knitr)
