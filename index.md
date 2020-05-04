@@ -11,3 +11,5 @@
 [Q2 Answers](files/hw1q2.html) for the HW1.
 
 [Q3 Answers](files/hw1q3.html) for the HW1.
+
+You can download the all written codes for HW1 from [here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/All Codes for HW1.R)
