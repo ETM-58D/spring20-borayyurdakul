@@ -383,9 +383,9 @@ summary {
 
 <ol style="list-style-type: decimal">
 <li><p><a href="https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/q3.rtf">Codes for answer of Question 3</a></p>
-<p>Question 3: Data from the Netflix competition are available on Moodle. The data provide the ratings that 10000 users gave to 100 movies (the extension of the file is *.dat but it is a file where each row is a user and the columns represent the movie. Each entry is the rating of the user on the row to the movie on the column). A list of movie titles is also available on Moodle. Not all movies were rated by all users.</p>
-<p>Suggest an appropriate distance (or similarity) metric between movies based on user ratings. To calculate the distance, you need to impute the missing values as some movies are not rated by all users. Please impute the missing ratings with a reasonable approach (i.e. fill with median rating) and perform classical multidimensional scaling on the distance that you create. Represent the movies on a 2D plot using the reduced dimensions. Are there any interesting results based on the reduced dimensions?</p>
-<p>Please note that distance calculation with a vector of size 10000 (i.e. ratings for a movie) can be problematic depending on your hardware. You can sample 1000 users randomly to perform the same operations if you experience difficulties.</p></li>
+<p>library(dplyr) library(data.table)</p>
+<p>After we upload the data, we identified the column names as movie names. We changed 0 values to NA values to fill the data with mean value for each column. We used dplyr package to fill the NA values and as we mentioned before we fill each column with its mean values. We took the transpose of the data to create a square matrix. Then, we applied distance function to data and created a matrix. We applied cmd to the matrix and drew the plot. It is very hard to make comments on plot.</p>
+<p>Please click <a href="https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/q2-q3.docx">here</a> for plots and more details.</p></li>
 </ol>
 
 
