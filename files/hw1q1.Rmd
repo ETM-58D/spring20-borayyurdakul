@@ -14,12 +14,12 @@ rmarkdown::render("/home/baydogan/Courses/IE582/Fall18/Guidelines/example_homewo
 
 1. [Codes for answer of Question 1.a](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/q1a.html)
 
-    This example is important because it is an R Notebook on Titanic data set. Titanic is considered as one of the Data Science 101 data set and this notebook provides a good exploratory data analysis. It is also a Kaggle Kernel, which is a very good source for this kind of example R codes. The notebook also covers feature engineering, missing data imputation and modeling.
+    Calculate the fraction of these points that are within distance 1 of the origin, giving an approximation of the volume of the unit hypersphere to the hypercube inscribing it. Plot this fraction as a function of D (a scatter plot of D versus the fraction). Note that Euclidean distance between two points, p and q, in D- dimensional space is defined as where 𝑝𝑖 is the ith dimension of point p and 𝑞𝑖 is the ith dimension of point q. (20 points)
     
 2. [Codes for answer of Question 1.b](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/q1b.html)
 
-    This example is important because it is an R Notebook on Titanic data set. Titanic is considered as one of the Data Science 101 data set and this notebook provides a good exploratory data analysis. It is also a Kaggle Kernel, which is a very good source for this kind of example R codes. The notebook also covers feature engineering, missing data imputation and modeling.
+    Use the value of this fraction at D = 2 and D = 3 to get estimates for the value of 𝜋 as you know the area (for D = 2) and volume (for D = 3) formulae for these cases. (5 points)
     
 3. [Codes for answer of Question 1.c](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/q1c.html)
 
-    This example is important because it is an R Notebook on Titanic data set. Titanic is considered as one of the Data Science 101 data set and this notebook provides a good exploratory data analysis. It is also a Kaggle Kernel, which is a very good source for this kind of example R codes. The notebook also covers feature engineering, missing data imputation and modeling.
+    This exercise is an alternative example to illustrate curse of dimensionality. You are asked to sample 1000 D-dimensional points from 1 to 10 dimensions, where the value in each dimension is uniformly randomly distributed between -1 and +1. For each value of D, generate an additional 100 new instances. For each of the new instances, find the closest point in 1000 instances using Euclidean distance. You are expected to end up with 100 calculated distances after this operation. Plot the average distance as a function of D (i.e. a scatter/line plot of D versus average distance). (10 points)
