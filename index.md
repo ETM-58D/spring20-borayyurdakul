@@ -1,5 +1,3 @@
-background-image: url('files/kaws.jpg') no-repeat;
-
 #Progress Journal of Class ETM58d
 
 ## Week 0 (10 April)
