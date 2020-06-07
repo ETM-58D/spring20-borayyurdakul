@@ -1,4 +1,3 @@
-setwd="/Users/ayhanertuglu/Desktop/Okul/II.Dönem/Business Analytics/Homework 2-3"
 install.packages("data.table")
 install.packages("dplyr")
 install.packages("tidyr")
