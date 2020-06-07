@@ -16,6 +16,6 @@ You can download the all written codes for HW1 from [here](https://github.com/ET
 
 ## Week 23 (7 June)
 
-[Click Here](files/hw2-3.html) for the answers of HW2/3.
+[Click Here](files/hw2-3.html) for the answers of HW2-3.
 
-You can download the all written codes for HW2/3 from [here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/All Codes for HW2-3.R)
+You can download the all written codes for HW2-3 from [here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/All Codes for HW2-3.R)
