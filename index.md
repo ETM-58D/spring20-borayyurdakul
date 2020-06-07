@@ -1,8 +1,8 @@
-# Example Progress Journal
+#Progress Journal of Class ETM58d
 
 ## Week 0 (10 April)
 
-[Click Here](files/interesting_example.html) is my interesting R example.
+[Click Here](files/interesting_example.html) for my interesting R example.
 
 ## Week 13 (4 May)
 
@@ -16,6 +16,6 @@ You can download the all written codes for HW1 from [here](https://github.com/ET
 
 ## Week 23 (7 June)
 
-[Click Here](files/hw2/3.html) for the answers of HW2/3.
+[Click Here](files/hw2-3.html) for the answers of HW2/3.
 
 You can download the all written codes for HW2/3 from [here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/All Codes for HW2/3.R)
