@@ -1,4 +1,4 @@
-background-image: url(![kaws](https://user-images.githubusercontent.com/61945929/83979735-411e4200-a919-11ea-938d-97e49d77df93.jpg)) no-repeat;
+background-image: url('files/kaws.jpg') no-repeat;
 
 #Progress Journal of Class ETM58d
 
