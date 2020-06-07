@@ -20,4 +20,4 @@ You can download the all written codes for HW1 from [here](https://github.com/ET
 
 You can download the all written codes for HW2-3 from [here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/All Codes for HW2-3.R)
 
-Please [click here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/Homework2-3.docx) to reach the report.
+Please [click here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/Homework 2-3.docx) to reach the report.
