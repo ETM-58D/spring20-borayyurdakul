@@ -1,13 +1,16 @@
+setwd="/Users/ayhanertuglu/Desktop/Okul/II.Dönem/Business Analytics/Homework 2-3"
+install.packages("data.table")
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("glmnet")
+install.packages("ggplot2")
 require(data.table)
 require(dplyr)
 require(tidyr)
 require(glmnet)
 require(ggplot2)
 set.seed(100)
-
-#a
-
-consumption=fread("/Users/Boray/Documents/school/bogazici/ETM58d/hw2-3/GercekZamanliTuketim-01012016-19052020.csv")
+consumption=fread("Desktop/Okul/II.Dönem/Business Analytics/Homework 2-3/GercekZamanliTuketim-01012016-19052020.csv")
 consumption
 setnames(consumption,names(consumption)[3],'value')
 consumption[,date:=as.Date(Tarih,'%d.%m.%Y')]
@@ -23,11 +26,11 @@ full_data=consumption[complete.cases(consumption)]
 full_data
 full_data_2 <- full_data %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 full_data_2
-full_data_2$lag_168_MAPE=with(full_data_2,abs((value-lag_168)/value)*100)
-full_data_2$MAPE_a_168=with(full_data_2,sum(full_data_2$lag_168_MAPE)/nrow(full_data_2))
-full_data_2$lag_48_MAPE=with(full_data_2,abs((value-lag_48)/value)*100)
-full_data_2$MAPE_a_48=with(full_data_2,sum(full_data_2$lag_48_MAPE)/nrow(full_data_2))
-ggplot(full_data_2, aes(hour, lag_168_MAPE, fill = hour, group = hour)) +
+full_data_2$lag_168_APE=with(full_data_2,abs((value-lag_168)/value)*100)
+full_data_2$MAPE_a_168=with(full_data_2,sum(full_data_2$lag_168_APE)/nrow(full_data_2))
+full_data_2$lag_48_APE=with(full_data_2,abs((value-lag_48)/value)*100)
+full_data_2$MAPE_a_48=with(full_data_2,sum(full_data_2$lag_48_APE)/nrow(full_data_2))
+ggplot(full_data_2, aes(hour, lag_168_APE, fill = hour, group = hour)) +
   geom_boxplot() +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
@@ -38,11 +41,11 @@ ggplot(full_data_2, aes(hour, lag_168_MAPE, fill = hour, group = hour)) +
                aes(label=sprintf("%1.1f", ..y..)),
                position=position_nudge(y=0.5), size=3.5) +
   scale_x_continuous(breaks=seq(0, 24, by = 1)) + 
-  labs(title= "Hourly Distribution of LAG_168 MAPE Values",
+  labs(title= "Hourly Distribution of LAG_168 APE Values",
        x= "Hour",
-       y= "MAPE")
+       y= "APE")
 
-ggplot(full_data_2, aes(hour, lag_48_MAPE, fill = hour, group = hour)) +
+ggplot(full_data_2, aes(hour, lag_48_APE, fill = hour, group = hour)) +
   geom_boxplot() +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
@@ -53,26 +56,25 @@ ggplot(full_data_2, aes(hour, lag_48_MAPE, fill = hour, group = hour)) +
                aes(label=sprintf("%1.1f", ..y..)),
                position=position_nudge(y=0.5), size=3.5) +
   scale_x_continuous(breaks=seq(0, 24, by = 1)) + 
-  labs(title= "Hourly Distribution of LAG_48 MAPE Values",
+  labs(title= "Hourly Distribution of LAG_48 APE Values",
        x= "Hour",
-       y= "MAPE")
+       y= "APE")
 
 #b
-
 #full_data
-full_data_train <- full_data %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test <- full_data %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train <- full_data %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test <- full_data %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 fit_lr=lm(value~+lag_168+lag_48,full_data_train)
-#summary(fit_lr)
+summary(fit_lr)
 pred.full_data_test <- predict(fit_lr,full_data_test)
 pred.full_data_test
 pred.full_data_test <- as.data.table(pred.full_data_test)
 full_data_test$predicted <- pred.full_data_test
-full_data_test$predicted_MAPE=with(full_data_test,abs((value-predicted)/value)*100)
+full_data_test$predicted_APE=with(full_data_test,abs((value-predicted)/value)*100)
+full_data_test$MAPE_b=with(full_data_test,sum(full_data_test$predicted_APE)/nrow(full_data_test))
 mse_b=sum(full_data_test$predicted_MAPE)/nrow(full_data_test)
 
 #c
-
 wide_predictor=dcast(full_data,date~paste0('lag_hours_',hour),value.var='value')
 wide_predictor_2=dcast(full_data,date~paste0('lag_hours_48_',hour),value.var='lag_48',)
 wide_predictor_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var='lag_168',)
@@ -83,8 +85,8 @@ final_feature_set=merge(wide_predictor,target,by='date')
 final_feature_set
 final_feature_set_1=merge(final_feature_set,target1,by='date')
 
-full_data_train_2 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_2 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_2 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_2 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 
 fit_lr_0=lm(lag_hours_0~-lag_hours_1-lag_hours_2-lag_hours_3-lag_hours_4-lag_hours_5-lag_hours_6-lag_hours_7
             -lag_hours_8-lag_hours_9-lag_hours_10-lag_hours_11-lag_hours_12-lag_hours_13-lag_hours_14-lag_hours_15
@@ -258,8 +260,8 @@ full_data_test_2$mse_b_22=with(full_data_test_2,sum(full_data_test_2$predicted_M
 full_data_test_2$predicted_MAPE_23=with(full_data_test_2,abs((lag_hours_23-predicted_23)/lag_hours_23)*100)
 full_data_test_2$mse_b_23=with(full_data_test_2,sum(full_data_test_2$predicted_MAPE_23)/nrow(full_data_test_2))
 
-#d
 
+#d
 #hour0
 wide_predictor_d_2=dcast(full_data,date~paste0('lag_hours_48_',hour),value.var='lag_48')
 wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var='lag_168')
@@ -267,8 +269,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==0]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_0"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -290,8 +292,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==1]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_1"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -310,8 +312,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target2=full_data[hour==2]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_2"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -330,8 +332,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target3=full_data[hour==3]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_3"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -350,8 +352,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target4=full_data[hour==4]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_4"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -370,8 +372,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target5=full_data[hour==5]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_5"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -390,8 +392,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target6=full_data[hour==6]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_6"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -410,8 +412,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target7=full_data[hour==7]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_7"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -430,8 +432,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target8=full_data[hour==8]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_8"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -450,8 +452,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target9=full_data[hour==9]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_9"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -470,8 +472,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target10=full_data[hour==10]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_10"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -490,8 +492,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target11=full_data[hour==11]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_11"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -510,8 +512,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target12=full_data[hour==12]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_12"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -530,8 +532,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==13]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_13"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -550,8 +552,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==14]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_14"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -570,8 +572,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==15]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_15"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -590,8 +592,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==16]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_16"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -610,8 +612,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==17]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_17"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -630,8 +632,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==18]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_18"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -650,8 +652,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==19]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_19"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -670,8 +672,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==20]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_20"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -690,8 +692,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==21]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_21"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -702,6 +704,7 @@ part_d_matrix$value_hour_21=data.table(full_data_test_3[,value_21])
 part_d_matrix$predicted_val_21=data.table(predicted_val_21)
 part_d_matrix$hour_21_MAPE=with(full_data_test_3,abs((value_21-predicted_val_21)/value_21)*100)
 part_d_matrix$hour_21_overallMAPE=with(part_d_matrix,sum(part_d_matrix$hour_21_MAPE)/nrow(part_d_matrix))
+
 #hour22
 wide_predictor_d_2=dcast(full_data,date~paste0('lag_hours_48_',hour),value.var='lag_48')
 wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var='lag_168')
@@ -709,8 +712,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==22]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_22"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -730,8 +733,8 @@ wide_predictor_d_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var=
 target1=full_data[hour==23]
 final_feature_set=merge(wide_predictor_d_2,wide_predictor_d_3,by='date')
 final_feature_set_1=merge(final_feature_set,target1[,list(date,value)],by='date')
-full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_3 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_3 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 names(full_data_test_3)[names(full_data_test_3) == "value"] <- "value_23"
 full_data_train_3_mat <- model.matrix( ~ ., full_data_train_3[,-50])
 full_data_test_3_mat <- model.matrix( ~ ., full_data_test_3[,-50])
@@ -742,3 +745,4 @@ part_d_matrix$value_hour_23=data.table(full_data_test_3[,value_23])
 part_d_matrix$predicted_val_23=data.table(predicted_val_23)
 part_d_matrix$hour_23_MAPE=with(full_data_test_3,abs((value_23-predicted_val_23)/value_23)*100)
 part_d_matrix$hour_23_overallMAPE=with(part_d_matrix,sum(part_d_matrix$hour_23_MAPE)/nrow(part_d_matrix))
+

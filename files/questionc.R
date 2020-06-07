@@ -4,10 +4,7 @@ require(tidyr)
 require(glmnet)
 require(ggplot2)
 set.seed(100)
-
-#c
-
-consumption=fread("/Users/Boray/Documents/school/bogazici/ETM58d/hw2-3/GercekZamanliTuketim-01012016-19052020.csv")
+consumption=fread("Desktop/Okul/II.Dönem/Business Analytics/Homework 2-3/GercekZamanliTuketim-01012016-19052020.csv")
 consumption
 setnames(consumption,names(consumption)[3],'value')
 consumption[,date:=as.Date(Tarih,'%d.%m.%Y')]
@@ -21,7 +18,6 @@ consumption[,lag_48:=shift(value,48)]
 consumption[1:169]
 full_data=consumption[complete.cases(consumption)]
 full_data
-
 wide_predictor=dcast(full_data,date~paste0('lag_hours_',hour),value.var='value')
 wide_predictor_2=dcast(full_data,date~paste0('lag_hours_48_',hour),value.var='lag_48',)
 wide_predictor_3=dcast(full_data,date~paste0('lag_hours_168_',hour),value.var='lag_168',)
@@ -32,8 +28,8 @@ final_feature_set=merge(wide_predictor,target,by='date')
 final_feature_set
 final_feature_set_1=merge(final_feature_set,target1,by='date')
 
-full_data_train_2 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date <= "2020-03-01")
-full_data_test_2 <- final_feature_set_1 %>%filter(date >= "2020-03-02" & date <= "2020-05-19")
+full_data_train_2 <- final_feature_set_1 %>%filter(date >= "2016-01-01" & date < "2020-03-01")
+full_data_test_2 <- final_feature_set_1 %>%filter(date >= "2020-03-01" & date <= "2020-05-19")
 
 fit_lr_0=lm(lag_hours_0~-lag_hours_1-lag_hours_2-lag_hours_3-lag_hours_4-lag_hours_5-lag_hours_6-lag_hours_7
             -lag_hours_8-lag_hours_9-lag_hours_10-lag_hours_11-lag_hours_12-lag_hours_13-lag_hours_14-lag_hours_15
