@@ -80,7 +80,7 @@ ui <- navbarPage("ETM 58d / Homework 4 / Group 4",
                  tabPanel("Question 3",
                           sidebarLayout(
                             sidebarPanel(
-                              dateRangeInput('dateRange_3',min=as.Date('2017-01-01'),max = as.Date('2019-12-29'),
+                              dateRangeInput('dateRange_3',min=as.Date('2017-01-01'),max = as.Date('2019-12-27'),
                                              label = 'Filter consumption by date',
                                              start = as.Date('2017-01-01'), 
                                              end = as.Date('2019-12-27')
