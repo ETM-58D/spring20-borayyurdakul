@@ -12,6 +12,9 @@ library(reshape2)
 data=fread("ETM58D_Spring20 HW 4_electricity_load_Turkey.csv")
 data=data.table(data)
 data$Date =  as.Date(data$Date, format = "%Y-%m-%d")
+data$Average_Temperature=with(data,(T_1+T_2+T_3+T_4+T_5+T_6+T_7)/7)
+data$Average_Temperature=sprintf("%1.2f°C", data$Average_Temperature)
+data = subset(data, select = -c(4:10))
 str(data)
 
 #codes for question 2
@@ -89,9 +92,6 @@ ui <- navbarPage("ETM 58d / Homework 4 / Group 4",
 
 server <- function(input, output, session) {
   filtered_data <- reactive({data %>% filter(Date >= input$dateRange[1] & Date <= input$dateRange[2])})
-  data$Average_Temperature=with(data,(T_1+T_2+T_3+T_4+T_5+T_6+T_7)/7)
-  data$Average_Temperature=sprintf("%1.2f°C", data$Average_Temperature)
-  data = subset(data, select = -c(4:10))
   
   output$table  <- DT::renderDataTable({DT::datatable(filtered_data())
   })
