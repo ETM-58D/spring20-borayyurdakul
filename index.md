@@ -26,6 +26,8 @@ You can reach all the written codes for HW2-3 from [here](https://github.com/ETM
 
 [Click here](https://bounetm58dgroup4.shinyapps.io/hw4_app/) to reach the interactive website.
 
+[Click here](files/hw4.html) for the answers of HW4.
+
 Please [click here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/hw4.docx) to download the report.
 
 You can reach the code from [here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/hw4.R)
