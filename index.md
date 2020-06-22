@@ -21,3 +21,11 @@ You can download the all written codes for HW1 from [here](https://github.com/ET
 Please [click here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/Homework 2-3.docx) to reach the report.
 
 You can download the all written codes for HW2-3 from [here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/All Codes for HW2-3.R)
+
+## Week 26 (22 June)
+
+[Click here](https://bounetm58dgroup4.shinyapps.io/hw4_app/) to reach the interactive website.
+
+Please [click here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/hw4.docx) to reach the report.
+
+You can download the code from [here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/hw4.R)
