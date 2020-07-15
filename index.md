@@ -31,3 +31,9 @@ You can reach all the written codes for HW2-3 from [here](https://github.com/ETM
 Please [click here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/hw4.docx) to download the report.
 
 You can reach the code from [here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/hw4.R)
+
+## Week 29 (16 July)
+
+[Click here](files/project.html) to reach the codes for the project.
+
+Please [click here](https://github.com/ETM-58D/spring20-borayyurdakul/blob/master/files/Forecasting E-Commerce Sales_ETM58D Project Report_Group 4.pdf) to download the report.
